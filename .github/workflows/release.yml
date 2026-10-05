@@ -52,6 +52,7 @@ jobs:
           if-no-files-found: error
 
   pypi:
+    if: vars.PYPI_PUBLISH_ENABLED == 'true'
     needs: build
     runs-on: ubuntu-latest
     environment:
@@ -75,7 +76,8 @@ jobs:
           packages-dir: packages/
 
   github:
-    needs: pypi
+    if: always() && needs.build.result == 'success' && (needs.pypi.result == 'success' || needs.pypi.result == 'skipped')
+    needs: [build, pypi]
     runs-on: ubuntu-latest
     permissions:
       contents: write

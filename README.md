@@ -10,7 +10,8 @@ It uses Moldable's existing encrypted Remote pairing. An embedded-device
 [bridge](docs/device-bridge.md) adds device enrollment, text, and an experimental
 push-to-talk voice path. Device actions and sensor ingestion remain planned in
 the [delivery plan](docs/roadmap.md).
-There is no published package or physically verified hardware release yet.
+Preview packages are distributed through GitHub Releases. PyPI publication and
+physical hardware verification remain pending.
 
 The separate **Anything Devices** repository provides Node 01, Orbit 01 and
 Frame 01 plans, including the embedded build/setup workflow. This Python
@@ -19,6 +20,18 @@ package runs on the trusted host; its bridge connects the board firmware.
 Pairing currently grants general remote-controller access. Selecting a workspace
 or Bot in this SDK does not narrow that grant. Use devices and code you trust;
 see [security](SECURITY.md) and the [architecture](docs/architecture.md).
+
+## Install the alpha
+
+Use Python 3.11 or newer on Linux or macOS. In a virtual environment:
+
+```sh
+python -m pip install https://github.com/moldable-ai/gadget-sdk/releases/download/v0.1.0a1/moldable_gadget_sdk-0.1.0a1-py3-none-any.whl
+```
+
+The [release](https://github.com/moldable-ai/gadget-sdk/releases/tag/v0.1.0a1)
+includes the wheel, source archive, and SHA-256 checksums. It is a software
+preview with the access limitations described above.
 
 ## Install from source
 

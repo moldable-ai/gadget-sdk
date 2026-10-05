@@ -41,3 +41,11 @@ After publication, install the exact PyPI version in a fresh environment and
 check the CLI. Verify the public metadata, release artifacts and checksums.
 Update the README's package installation instructions only after the package
 is confirmed available.
+
+## GitHub-only previews
+
+GitHub release artifacts can ship before PyPI account setup is complete.
+The `pypi` job runs only when repository variable `PYPI_PUBLISH_ENABLED` is
+`true`; leave it unset until the trusted publisher is configured. The GitHub
+release still requires all checks and the clean installation test to pass.
+After configuring PyPI, enable the variable before tagging the next version.
