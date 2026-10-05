@@ -23,8 +23,9 @@ See [security](SECURITY.md) and the [delivery plan](docs/roadmap.md).
 ## Release availability
 
 Binary publication is pending final local verification of the scoped preview.
-Until the [release workflow](https://github.com/moldable-ai/gadget-sdk/actions/workflows/release.yml)
-finishes, install from source below. Completed
+Install from source below for now. The
+[release workflow](https://github.com/moldable-ai/gadget-sdk/actions/workflows/release.yml)
+runs only for prepared releases. Completed
 [releases](https://github.com/moldable-ai/gadget-sdk/releases) include the wheel,
 source archive and SHA-256 checksums. Use current source for scoped actions and
 sensors; the 0.1 alpha supports legacy Remote pairing only.

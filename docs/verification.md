@@ -27,9 +27,23 @@ Relay revision `7d6b60e` passed all 181 tests, including authenticated gadget
 socket isolation, all nine methods, denied broad APIs, phone broadcast isolation,
 and revocation, and was deployed to production with migration `0009`.
 
-Native scoped foundation verification is still pending. These automated results
-do not establish a compatible released desktop version or physical behavior.
-The legacy baseline below remains separately scoped to 0.1.
+The native macOS check also passed scoped pairing, same-mutation text replay,
+two-Bot isolation, denied general Remote methods, capability approval, schema
+change reapproval, a confirmed simulated light action, timestamped temperature,
+offline cancellation/expiry, and both online and offline revocation. The same
+SDK process survived a host restart and resumed observations without replaying
+the light action. All temporary gadget access was revoked and the original
+workspace restored.
+
+The final signed QA executable SHA256 was
+`96130660ecc723e3721cabba3819576a76b95c15e70649680c84b05728e0fd55`;
+AI build `58dca0b62e6854fd4d5259b2`. Compatible desktop source is
+`a62dd0d633c2d254e35981b735f785d7851e5114` (final changes include formatting-only
+cleanup after the native run). No compatible released desktop version is asserted.
+The iOS simulator was unpaired and a temporary pairing was not authorized during
+the run, so phone continuity and phone-initiated actions remain unverified.
+Physical hardware remains unverified. The legacy baseline below is separately
+scoped to 0.1.
 
 ## Verified preview baseline
 
