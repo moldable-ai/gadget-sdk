@@ -40,8 +40,15 @@ The final signed QA executable SHA256 was
 AI build `58dca0b62e6854fd4d5259b2`. Compatible desktop source is
 `a62dd0d633c2d254e35981b735f785d7851e5114` (final changes include formatting-only
 cleanup after the native run). No compatible released desktop version is asserted.
-The iOS simulator was unpaired and a temporary pairing was not authorized during
-the run, so phone continuity and phone-initiated actions remain unverified.
+An authorized temporary iOS 27 simulator pairing subsequently passed phone
+continuity and phone-initiated actions with iOS source `05729e3d7afd`. It opened
+the existing QA conversation before gadget pairing, requested the approved
+light action, and displayed the confirmed result and 22.5 °C. The one device
+journal entry matched the host receipt. After gadget revocation, a phone
+relaunch restored its QA workspace and reopened the same answer. Both temporary
+connections were revoked; the pre-existing physical phone pairing was preserved.
+That run used desktop `a62dd0d633c2` and QA executable SHA256
+`ceb3eee882382a0dfc77955d6d634b04a4a53fa375898591d9184b6adfd6652a`.
 Physical hardware remains unverified. The legacy baseline below is separately
 scoped to 0.1.
 
