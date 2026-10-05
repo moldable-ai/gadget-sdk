@@ -234,3 +234,37 @@ async def test_sensor_validates_value_and_keeps_timestamp_and_id(
             "observedAt": observed_at,
         }
     ]
+
+
+async def test_light_example_survives_temporary_offline_sensor_response(
+    peer: Peer, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import importlib.util
+    from functools import partial
+
+    directory = tmp_path / "device"
+    await provision(peer, directory)
+    remote = DevicePeer()
+    peer.gadget_handler = remote.handle
+    peer.method_errors["gadget.observations.append"] = ["desktop_offline"]
+    example_path = Path(__file__).parents[1] / "examples" / "light-and-sensor.py"
+    spec = importlib.util.spec_from_file_location("light_example", example_path)
+    assert spec is not None and spec.loader is not None
+    example = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(example)
+    monkeypatch.setattr(
+        example, "GadgetClient", partial(GadgetClient, allow_insecure_localhost=True)
+    )
+    task = asyncio.create_task(example.main(directory, 22.5))
+    try:
+        async with asyncio.timeout(20):
+            while not remote.readings:
+                if task.done():
+                    await task
+                    pytest.fail("Example exited during temporary host unavailability")
+                await asyncio.sleep(0.05)
+        assert remote.readings[0]["value"] == 22.5
+        assert not task.done()
+    finally:
+        task.cancel()
+        await asyncio.gather(task, return_exceptions=True)

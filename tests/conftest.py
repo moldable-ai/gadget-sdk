@@ -71,6 +71,7 @@ class Peer:
         self.refresh_error: str | None = None
         self.drop_next_request = False
         self.drop_next_method: str | None = None
+        self.method_errors: dict[str, list[str]] = {}
         self.reverse_two = False
         self._held: list[Object] = []
         self.selected_workspace = "other-workspace"
@@ -227,6 +228,12 @@ class Peer:
                 )
             )
             self.requests.append((frame, body))
+            errors = self.method_errors.get(frame["method"], [])
+            if errors:
+                await socket.send_json(
+                    {"type": "res", "id": frame["id"], "error": {"code": errors.pop(0)}}
+                )
+                continue
             if frame["method"] == "gadget.hello":
                 assert self.gadget is not None
                 result: Json = {**self.gadget, "botName": "Test Bot", "name": "Test gadget"}

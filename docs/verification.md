@@ -20,12 +20,12 @@ uv build
 ## Scoped foundation (current source)
 
 The 0.2 source adds scoped grants, actions, sensors and a durable command journal.
-On October 5 its 50 automated tests passed, including real encrypted transport
+On October 5 its 51 automated tests passed, including real encrypted transport
 fault injection for duplicated command delivery, lost result acknowledgements,
 restart, cancellation and schema rejection. The wheel/source build passed.
 Relay revision `7d6b60e` passed all 181 tests, including authenticated gadget
 socket isolation, all nine methods, denied broad APIs, phone broadcast isolation,
-and revocation, and was deployed to production with migration0009.
+and revocation, and was deployed to production with migration `0009`.
 
 Native scoped foundation verification is still pending. These automated results
 do not establish a compatible released desktop version or physical behavior.

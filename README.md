@@ -17,20 +17,17 @@ repository provides Node 01, Orbit 01 and Frame 01 plans and board setup.
 
 Use **Settings → Remote → Add gadget** for scoped access. A legacy pairing from
 **Pair Moldable for iOS** continues to grant general Remote controller access.
-The published 0.1 alpha is the legacy client; current source is 0.2 development.
+The 0.1 alpha uses the legacy client; current source is 0.2 development.
 See [security](SECURITY.md) and the [delivery plan](docs/roadmap.md).
 
-## Install the alpha
+## Release availability
 
-Use Python 3.11 or newer on Linux or macOS. In a virtual environment:
-
-```sh
-python -m pip install https://github.com/moldable-ai/gadget-sdk/releases/download/v0.1.0a1/moldable_gadget_sdk-0.1.0a1-py3-none-any.whl
-```
-
-The [release](https://github.com/moldable-ai/gadget-sdk/releases/tag/v0.1.0a1)
-includes the wheel, source archive, and SHA-256 checksums. It is a software
-preview with the access limitations described above.
+The initial `v0.1.0a1` publication is waiting for GitHub-hosted release checks.
+Until the [release workflow](https://github.com/moldable-ai/gadget-sdk/actions/workflows/release.yml)
+finishes, install from source below. Completed
+[releases](https://github.com/moldable-ai/gadget-sdk/releases) include the wheel,
+source archive and SHA-256 checksums. Use current source for scoped actions and
+sensors; the 0.1 alpha supports legacy Remote pairing only.
 
 ## Install from source
 

@@ -81,10 +81,13 @@ async def main(directory: Path, temperature: float) -> None:
                 try:
                     await runtime.observe("temperature", temperature)
                 except RemoteError as error:
-                    if error.code != "gadget_request_denied":
+                    if error.code == "gadget_request_denied":
+                        print(
+                            "Temperature is waiting for approval in Settings → Remote.", flush=True
+                        )
+                    elif error.code not in {"desktop_offline", "request_timeout", "rate_limited"}:
                         raise
-                    print("Temperature is waiting for approval in Settings → Remote.", flush=True)
-                except (ConnectionLost, OSError):
+                except (ConnectionLost, OSError, TimeoutError):
                     pass  # The runtime reconnects; the next sample has a new timestamp.
                 await asyncio.sleep(15)
 

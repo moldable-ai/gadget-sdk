@@ -7,19 +7,37 @@ only the person can approve capability changes in native desktop Settings.
 ```python
 from moldable_gadget import Action, Sensor, GadgetRuntime
 
+
 async def set_light(args):
     await hardware.set_power(args["on"])
     actual = await hardware.read_power()
     return {"on": actual}  # return after observing the outcome
 
-runtime = GadgetRuntime(client, actions=[Action(
-    "set-light", "Set the desk light power",
-    {"type": "object", "properties": {"on": {"type": "boolean"}},
-     "required": ["on"], "additionalProperties": False}, set_light,
-)], sensors=[Sensor(
-    "temperature", "Workshop temperature",
-    {"type": "number", "minimum": -40, "maximum": 125}, "°C",
-)])
+
+runtime = GadgetRuntime(
+    client,
+    actions=[
+        Action(
+            "set-light",
+            "Set the desk light power",
+            {
+                "type": "object",
+                "properties": {"on": {"type": "boolean"}},
+                "required": ["on"],
+                "additionalProperties": False,
+            },
+            set_light,
+        )
+    ],
+    sensors=[
+        Sensor(
+            "temperature",
+            "Workshop temperature",
+            {"type": "number", "minimum": -40, "maximum": 125},
+            "°C",
+        )
+    ],
+)
 await runtime.declare()
 # Run runtime.run() in a task, and send readings from your sensor task:
 await runtime.observe("temperature", 22.5)
