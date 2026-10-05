@@ -1,0 +1,44 @@
+[build-system]
+requires = ["hatchling>=1.27,<2"]
+build-backend = "hatchling.build"
+
+[project]
+name = "moldable-gadget-sdk"
+version = "0.1.0a1"
+description = "Connect trusted Linux gadgets to a Moldable desktop"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{name = "Moldable contributors"}]
+dependencies = ["cryptography>=44,<47", "httpx>=0.28,<0.29", "websockets>=15,<17"]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8,<10",
+    "pytest-asyncio>=0.25,<2",
+    "ruff>=0.11,<1",
+    "build>=1.2,<2",
+    "aiohttp>=3.12,<4",
+]
+voice = [
+    "aiortc>=1.14,<2",
+]
+
+[project.scripts]
+moldable-gadget = "moldable_gadget.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/moldable_gadget"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+python_files = ["test-*.py"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "ASYNC"]

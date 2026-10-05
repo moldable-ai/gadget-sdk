@@ -1,0 +1,44 @@
+{
+  "roomKey": "AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8",
+  "desktopId": "desktop-test",
+  "desktopPublicKey": "uvxxvq06xeS2PpyCFu5xo0quxlci7tvKcotOmzzM45Y",
+  "nonce": "AAECAwQFBgcICQoL",
+  "params": {
+    "workspaceId": "qa",
+    "botId": "bot-1",
+    "body": {
+      "text": "hello",
+      "format": "plain"
+    },
+    "clientMutationId": "mutation-1"
+  },
+  "result": {
+    "result": {
+      "accepted": true
+    }
+  },
+  "request": {
+    "type": "req",
+    "id": "00000000-0000-4000-8000-000000000001",
+    "method": "bot.message.append",
+    "messageId": "00000000-0000-4000-8000-000000000002",
+    "encrypted": {
+      "v": 1,
+      "alg": "A256GCM",
+      "nonce": "AAECAwQFBgcICQoL",
+      "ciphertext": "5baBSch_-VG6uVH86sXva7A-bOCc18uqDRmq0EdFEeERB0Nbu73iGNa-WF6tmqJpQyiKnBI_DTOtyG4mIfhGFPlnlvtNFxZTP0ydzPJ7Ccej0MiniaQkA-nDoZzTRlvbC146NEl8xPqDVG82z-dLvZQwhF1_IARNzLx93U8"
+    }
+  },
+  "response": {
+    "type": "res",
+    "id": "00000000-0000-4000-8000-000000000001",
+    "messageId": "00000000-0000-4000-8000-000000000002",
+    "encrypted": {
+      "v": 1,
+      "alg": "A256GCM",
+      "nonce": "AAECAwQFBgcICQoL",
+      "ciphertext": "Jg0u0slWrps9b5Cs4rX2BJwo6eammCFlkmwSnDuuA2_BORPFu4S-8i36O1Y"
+    },
+    "signature": "J5gcYYHiiCuVn7q_VxpRfiCZNa_4XZRtwD-90CQ9xrfAOlISJ6oMgS7buEKJtPLcKH6-DFd9sxz7SHn26yvFDg"
+  }
+}

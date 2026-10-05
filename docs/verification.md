@@ -1,0 +1,85 @@
+# Verification
+
+The automated tests run against an independent synthetic HTTP/WebSocket peer
+using real sockets and cryptography. They protect the SDK's wire shapes,
+request/response correlation, signed identity, refresh persistence, single-writer
+storage, no silent mutation retry, event deduplication and revocation handling.
+They do not prove that a deployed desktop persists one message or runs a Bot.
+
+The protocol fixture is independently generated with Node's crypto implementation;
+the Python encoder/decoder must match its fixed bytes and reject tampering.
+Fixture keys are synthetic and have no account access.
+
+```sh
+uv run --all-extras pytest
+uv run --all-extras ruff check .
+uv run --all-extras ruff format --check .
+uv build
+```
+
+## Verified preview baseline
+
+On October 5, 2026, Python preview `0.1.0a1` passed a live macOS desktop check
+against desktop source `2e09598966764a0f4d47a4c2ed18c46dbbf9fa18`, signed QA
+executable SHA256 `967d098c0e997298e54c6c4b64fd5c643313db26a50f15004b9f3ebb3f2af1a9`,
+and AI build `1dccc8bd0eee508277bedc59`, using the hosted production Relay.
+The deployed Relay revision was not independently established.
+
+The test paired a separate SDK identity, used a dedicated QA workspace with
+Luna Medium, displayed the same request and answer in the native desktop,
+reconnected and replayed the answer, retried one mutation without another user
+message or turn, refreshed credentials, and revoked the live device. Revocation
+erased local credentials and a subsequent server refresh was rejected. The
+pre-existing iPhone pairing remained listed; iPhone operation was not tested.
+The temporary device was revoked and the original desktop/Remote workspace
+selection restored. This validates one host build, not a compatibility range.
+
+The host may return the original cached acknowledgement with `replayed: false`
+on a successful duplicate retry. Compare authoritative message/turn identities
+and transcript/replay state rather than using that flag as a delivery count.
+
+## Live release gate
+
+Use a dedicated Moldable QA workspace and a Luna Medium Bot. Through the current
+native desktop build, pair a distinct SDK device identity, send one synthetic
+request, verify its content and resulting reply in the desktop, reconnect and
+replay, retry the same mutation ID without duplicate domain work, and revoke the
+SDK identity. Verify another paired client and its scope remain usable.
+
+Native stories and results are maintained in the desktop repository's
+`docs/qa/`; a local peer pass must never be recorded as a Computer Use pass.
+Live pairing creates persistent remote access and must be authorized. Physical
+Pi/ESP32 tests need exact hardware and firmware revisions. They are separate
+from both desktop QA and host-side protocol tests.
+
+No public release, live host compatibility certification or physical device
+support is implied by building a wheel successfully.
+
+## Embedded bridge and voice — October 5, 2026
+
+The actual compiled round-display device core completed enrollment, text,
+HMAC reconnect and revocation against this bridge. The independently implemented
+desktop peer was synthetic for that first check. The later native-host run used
+a real paired desktop and provider: a synthetic recording was transcribed,
+submitted to a Luna Medium QA Bot, displayed in native chat, and returned as
+4.2 seconds of mono 16 kHz PCM to the device core's simulated speaker. This is
+software media verification; no physical microphone, speaker or board was used.
+
+The same core verified cancellation before admission (no extra user message),
+Talk interrupting playback, reconnect without replayed speech, and device
+revocation. A pre-fix provider configuration-ordering failure was reproduced
+and is guarded by a real local WebRTC data-channel regression. Offline controller
+revocation also exposed an HTTP-401 upgrade case; the client now refreshes once
+and resolves revoked grants to a pairing-required error.
+
+Native build, exact device-core revision, scoped conversation evidence, audio,
+and cleanup are maintained in the desktop repository's
+`docs/qa/status.md` and `docs/qa/suites/gadget-sdk.md`.
+
+The Anything Devices collection now supplies the matching host label, an
+E1002 persistent-text port, pinned board build profiles and optional local-CA
+trust. Both embedded targets compile with ESP-IDF v6.0.1. The 800 × 480 device
+simulator also verifies a button request, a stable reply beyond the normal
+display timeout, HMAC reconnect and revocation. These are software results;
+physical GPIO, display refresh, audio quality, battery life and flashing remain
+unverified. Firmware build hashes and notices live with those device plans.
