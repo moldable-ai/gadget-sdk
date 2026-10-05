@@ -49,3 +49,10 @@ The `pypi` job runs only when repository variable `PYPI_PUBLISH_ENABLED` is
 `true`; leave it unset until the trusted publisher is configured. The GitHub
 release still requires all checks and the clean installation test to pass.
 After configuring PyPI, enable the variable before tagging the next version.
+
+## CI cost policy
+
+Finish tests, lint, formatting and package validation locally before tagging.
+SDK checks run only through a release or an explicit manual dispatch; ordinary
+pushes and pull requests do not spend hosted runner time. Publish one prepared
+candidate rather than tagging intermediate work.

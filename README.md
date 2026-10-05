@@ -22,7 +22,7 @@ See [security](SECURITY.md) and the [delivery plan](docs/roadmap.md).
 
 ## Release availability
 
-The initial `v0.1.0a1` publication is waiting for GitHub-hosted release checks.
+Binary publication is pending final local verification of the scoped preview.
 Until the [release workflow](https://github.com/moldable-ai/gadget-sdk/actions/workflows/release.yml)
 finishes, install from source below. Completed
 [releases](https://github.com/moldable-ai/gadget-sdk/releases) include the wheel,
