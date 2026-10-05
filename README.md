@@ -22,9 +22,11 @@ see [security](SECURITY.md) and the [architecture](docs/architecture.md).
 
 ## Install from source
 
-Use Python 3.11 or newer on Linux or macOS. From this repository:
+Use Python 3.11 or newer on Linux or macOS:
 
 ```sh
+git clone https://github.com/moldable-ai/moldable-gadget-sdk.git
+cd moldable-gadget-sdk
 python3 -m venv .venv
 . .venv/bin/activate
 python -m pip install -e .

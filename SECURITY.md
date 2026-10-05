@@ -24,8 +24,7 @@ arbitrary file access, firmware flashing or hardware actuator API is enabled.
 
 ## Reporting
 
-Do not put exploit details or credentials in a public issue. For this unpublished
-preview, contact the maintainer through the private channel that supplied the
-checkout. Before public release, maintainers must configure and document a
-private vulnerability-reporting channel on the canonical repository. There is
-no response-time or supported-version guarantee for this preview.
+Do not put exploit details or credentials in a public issue. Use GitHub's
+[private vulnerability reporting](https://github.com/moldable-ai/moldable-gadget-sdk/security/advisories/new)
+on the canonical repository to contact the maintainers privately. There is no
+response-time or supported-version guarantee for this preview.
