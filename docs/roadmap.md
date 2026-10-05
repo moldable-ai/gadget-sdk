@@ -17,10 +17,14 @@ Current progress:
 
 - Stage 1: implemented and verified with independent protocol/socket tests and
   temporary live desktop pairing, text, replay, reconnect and revocation.
-- Stage 2: a local bridge registry issues a separate device identity and fixes
-  routing to one workspace/Bot. This is **not** a host-enforced narrow controller
-  grant. Host/Relay capability grants and a native device-management UI remain.
-- Stage 3: device actions and durable sensor ingestion remain future work.
+- Stage 2: current source implements host-enforced workspace/Bot grants,
+  separate content keys, scoped Relay methods, gadget-aware presentation and
+  native management. Production Relay and native verification are tracked in
+  the desktop QA catalog; implementation alone is not a release pass.
+- Stage 3: current source implements descriptor-bound approvals, bounded schemas,
+  durable command outcomes, timestamped observations and a simulated light/sensor
+  example. Socket tests cover duplicate/lost-ack delivery, cancellation, invalid
+  input and process recovery. Native end-to-end verification is tracked separately.
 - Stage 4: the bridge interoperates with the separately licensed Protocol v1
   device core, verified with its real compiled simulator. Board overlays and
   build profiles live with the device plans. Physical board checks remain.
@@ -31,8 +35,9 @@ Current progress:
 - Stage 6: source installation is available. Hosted releases, signed updates,
   rollback and physical validation are not supplied by this preview.
 
-The client and current bridge add no host wire methods. Host-enforced grants
-will require coordinated desktop and Relay releases with compatibility gates.
+Scoped grants add a separate `gadget.*` namespace. The desktop refuses to issue
+a gadget QR if the Relay does not echo its exact grant scope. Legacy pairings
+remain compatible, with their broader access explicitly documented.
 Native desktop/iOS QA remains in the desktop repository. Build-time success is
 never physical hardware verification. Package publication and a public GitHub
 repository are separate release actions.

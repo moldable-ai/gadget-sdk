@@ -17,6 +17,20 @@ uv run --all-extras ruff format --check .
 uv build
 ```
 
+## Scoped foundation (current source)
+
+The 0.2 source adds scoped grants, actions, sensors and a durable command journal.
+On October 5 its 50 automated tests passed, including real encrypted transport
+fault injection for duplicated command delivery, lost result acknowledgements,
+restart, cancellation and schema rejection. The wheel/source build passed.
+Relay revision `7d6b60e` passed all 181 tests, including authenticated gadget
+socket isolation, all nine methods, denied broad APIs, phone broadcast isolation,
+and revocation, and was deployed to production with migration0009.
+
+Native scoped foundation verification is still pending. These automated results
+do not establish a compatible released desktop version or physical behavior.
+The legacy baseline below remains separately scoped to 0.1.
+
 ## Verified preview baseline
 
 On October 5, 2026, Python preview `0.1.0a1` passed a live macOS desktop check

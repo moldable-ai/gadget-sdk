@@ -10,10 +10,14 @@ from .errors import (
     ReplayRequired,
 )
 from .pairing import pair
+from .runtime import Action, GadgetRuntime, Sensor
 from .storage import StateStore, default_state_directory
 
 __all__ = [
     "GadgetClient",
+    "GadgetRuntime",
+    "Action",
+    "Sensor",
     "GadgetError",
     "ConnectionLost",
     "PairingRequired",

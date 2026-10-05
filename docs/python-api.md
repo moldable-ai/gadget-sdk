@@ -102,3 +102,11 @@ must be selected explicitly with `pair --relay https://your-relay.example`.
 HTTP/WS are allowed only for loopback development with
 `--allow-insecure-localhost`. The claimed WebSocket must match the chosen
 origin and desktop. HTTP redirects and ambient proxy configuration are disabled.
+
+## Scoped gadgets and device runtime
+
+For an Add gadget pairing, `client.grant` contains the fixed workspace/Bot.
+Selecting those same IDs is harmless; other IDs fail. `bots()` returns only the
+assigned Bot and `events()` polls its durable replay without phone broadcasts.
+Use `GadgetRuntime`, `Action` and `Sensor` for [actions and observations](actions-and-sensors.md).
+Existing legacy pairings retain the behavior described above.

@@ -11,7 +11,7 @@ import hashlib
 import json
 import os
 import uuid
-from collections.abc import AsyncIterator
+from collections.abc import AsyncIterator, Awaitable, Callable
 from datetime import UTC, datetime, timedelta
 
 import pytest_asyncio
@@ -70,6 +70,7 @@ class Peer:
         self.claim_desktop_id = "desktop-test"
         self.refresh_error: str | None = None
         self.drop_next_request = False
+        self.drop_next_method: str | None = None
         self.reverse_two = False
         self._held: list[Object] = []
         self.selected_workspace = "other-workspace"
@@ -77,6 +78,8 @@ class Peer:
         self.ws_rejections: list[int] = []
         self.conversation = False
         self.mutations: dict[str, Object] = {}
+        self.gadget: Object | None = None
+        self.gadget_handler: Callable[[str, Object], Awaitable[Object]] | None = None
         self.app = web.Application()
         self.app.router.add_post("/v1/pairings/claim", self.claim)
         self.app.router.add_post("/v1/sessions/refresh", self.rotate)
@@ -94,6 +97,8 @@ class Peer:
             "e2eeKey": enc(self.room_key),
             "desktop": {"id": "desktop-test", "name": "Test Mac", "publicKey": self.public},
         }
+        if self.gadget is not None:
+            setup["gadget"] = self.gadget
         setup.update(changes)
         return "moldable-remote://pair?setup=" + enc(json.dumps(setup).encode())
 
@@ -222,7 +227,17 @@ class Peer:
                 )
             )
             self.requests.append((frame, body))
-            if frame["method"] == "remote.hello":
+            if frame["method"] == "gadget.hello":
+                assert self.gadget is not None
+                result: Json = {**self.gadget, "botName": "Test Bot", "name": "Test gadget"}
+            elif frame["method"].startswith("gadget.") and self.gadget_handler is not None:
+                result = await self.gadget_handler(frame["method"], body)
+                if self.drop_next_request or self.drop_next_method == frame["method"]:
+                    self.drop_next_request = False
+                    self.drop_next_method = None
+                    await socket.close()
+                    break
+            elif frame["method"] == "remote.hello":
                 nonce = body["clientNonce"]
                 canonical = f"moldable-remote-desktop-proof-v1\n{nonce}\ndesktop-test\n2"
                 await socket.send_json(

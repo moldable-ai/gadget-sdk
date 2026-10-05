@@ -94,7 +94,7 @@ async def run(args: argparse.Namespace) -> None:
         with StateStore(args.state_dir) as store:
             if args.command == "pair":
                 print(
-                    "This developer preview pairs with full remote-controller access.",
+                    "Use Settings → Remote → Add gadget for restricted workspace/Bot access.",
                     file=sys.stderr,
                 )
                 # getpass otherwise falls back to echoed input when no terminal is available.
@@ -104,7 +104,14 @@ async def run(args: argparse.Namespace) -> None:
                 await pair(
                     store, link, args.name, relay=args.relay, local=args.allow_insecure_localhost
                 )
-                output({"paired": True})
+                saved = store.load()
+                output(
+                    {
+                        "paired": True,
+                        "grant": saved.get("gadget"),
+                        "legacyController": "gadget" not in saved,
+                    }
+                )
             elif args.command == "forget":
                 store.forget()
                 output({"forgottenLocally": True, "revokeOnDesktop": True})
@@ -119,6 +126,7 @@ async def run(args: argparse.Namespace) -> None:
                             "desktopId",
                             "desktopName",
                             "expiresAt",
+                            "gadget",
                         )
                     }
                 )
@@ -166,7 +174,11 @@ async def run(args: argparse.Namespace) -> None:
                         )
                     await DeviceBridge(registry, backend, audio).run(args.host, args.port, tls)
         elif args.command == "workspaces":
-            output(client.ready.get("workspaces"))
+            output(
+                [{"id": client.grant["workspaceId"]}]
+                if client.grant
+                else client.ready.get("workspaces")
+            )
         elif args.command == "bots":
             output(await client.bots(args.workspace))
         elif args.command == "send":

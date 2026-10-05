@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "moldable-gadget-sdk"
-version = "0.1.0a1"
+version = "0.2.0a1"
 description = "Connect trusted Linux gadgets to a Moldable desktop"
 readme = "README.md"
 requires-python = ">=3.11"

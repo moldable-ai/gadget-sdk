@@ -111,3 +111,22 @@ pagination uses `beforeSequence`; replay uses the opaque `afterCursor`.
 Reference baseline: desktop source `2e09598966764a0f4d47a4c2ed18c46dbbf9fa18`
 and Relay source `6d9d3507461d4441ea5ae5359d4d56df8cab30ab`. These identify
 inspected source, not a certified deployed compatibility range.
+
+## Scoped gadget extension (current source)
+
+A compatible host adds `gadget: {version: 1, grantId, workspaceId, botId}` to a
+v2 pairing payload with a separate content key. Relay credentials carry exactly
+`gadget:<grantId>` and no phone scopes. Authenticated forwarding adds
+`controllerScopes` and the actual `controllerId`; controller-supplied routing
+metadata is rejected. Phone broadcast events exclude gadget sockets.
+
+Allowed methods are `gadget.hello`, `gadget.message.append`, `gadget.transcript`,
+`gadget.events.replay`, `gadget.turn.interrupt`, `gadget.capabilities.set`,
+`gadget.commands.poll`, `gadget.commands.result`, `gadget.observations.append`.
+Conversation methods target the fixed host grant; no workspace selection occurs.
+The SDK verifies the grant returned by `gadget.hello`. Content still uses the
+v2 envelope and desktop signature contract with the grant's separate key.
+
+Capabilities, command semantics and scalar schema limits are documented in
+[actions and sensors](actions-and-sensors.md). The reference authority is the
+coordinated desktop implementation, not a general-purpose remote tool API.

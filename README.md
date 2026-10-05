@@ -4,22 +4,21 @@ Build devices that talk to your Moldable desktop. A button can send a request
 to a Bot; a small screen can follow the same conversation you see on your Mac.
 Your desktop owns the conversation and runs the Bot with its existing context.
 
-**Developer preview.** This repository currently provides a Python client and
-CLI for trusted Linux devices, Raspberry Pi projects, and macOS development.
-It uses Moldable's existing encrypted Remote pairing. An embedded-device
-[bridge](docs/device-bridge.md) adds device enrollment, text, and an experimental
-push-to-talk voice path. Device actions and sensor ingestion remain planned in
-the [delivery plan](docs/roadmap.md).
-Preview packages are distributed through GitHub Releases. PyPI publication and
-physical hardware verification remain pending.
+**Developer preview.** The Python client and CLI support trusted Linux devices,
+Raspberry Pi projects, and macOS development. Current source adds host-enforced
+workspace/Bot grants, individually approved actions and sensors, and a durable
+device command journal. These features require the matching desktop build and
+Relay support; see [compatibility and verification](docs/verification.md).
 
-The separate **Anything Devices** repository provides Node 01, Orbit 01 and
-Frame 01 plans, including the embedded build/setup workflow. This Python
-package runs on the trusted host; its bridge connects the board firmware.
+The [embedded bridge](docs/device-bridge.md) also supports text and experimental
+push-to-talk. Its legacy voice path still requires a broad Remote pairing;
+it is not included in a scoped gadget grant. The separate **Anything Devices**
+repository provides Node 01, Orbit 01 and Frame 01 plans and board setup.
 
-Pairing currently grants general remote-controller access. Selecting a workspace
-or Bot in this SDK does not narrow that grant. Use devices and code you trust;
-see [security](SECURITY.md) and the [architecture](docs/architecture.md).
+Use **Settings → Remote → Add gadget** for scoped access. A legacy pairing from
+**Pair Moldable for iOS** continues to grant general Remote controller access.
+The published 0.1 alpha is the legacy client; current source is 0.2 development.
+See [security](SECURITY.md) and the [delivery plan](docs/roadmap.md).
 
 ## Install the alpha
 
@@ -47,8 +46,10 @@ python -m pip install -e .
 
 ## Pair with your desktop
 
-1. Open Moldable's Remote device-pairing dialog on your Mac. The current desktop
-   UI labels this **Pair Moldable for iOS**; choose **Copy pairing link**.
+1. On a compatible desktop, open **Settings → Remote → Add gadget**, give it
+   a name, and choose its Bot in the current workspace. Create the pairing and
+   choose **Copy pairing link**. If Add gadget is absent, update the desktop
+   before using actions or sensors.
 2. On your device, run:
 
    ```sh
@@ -57,7 +58,7 @@ python -m pip install -e .
 
 3. Paste the link at the hidden prompt. It expires after five minutes and can
    be used once. Keep the link private; it contains encryption material.
-4. Discover your workspace and Bot IDs:
+4. Read your assigned workspace and Bot IDs:
 
    ```sh
    moldable-gadget workspaces
@@ -112,7 +113,17 @@ asyncio.run(main())
 Start with the [terminal button example](examples/terminal-button.py). It keeps
 the intent and mutation ID on disk so an interrupted run can retry safely.
 See [API and recovery](docs/python-api.md) before building a long-lived device.
-No shell execution or inbound hardware control is enabled by this client.
+To add approved device control, run the [light-and-sensor example](examples/light-and-sensor.py):
+
+```sh
+python examples/light-and-sensor.py
+```
+
+Approve its capabilities in Settings → Remote, then ask the assigned Bot to
+turn the **simulated desk light** on and report its temperature. The light is
+file-backed and the temperature is synthetic; no hardware is required. Follow
+[actions and sensors](docs/actions-and-sensors.md) to connect actual hardware.
+The SDK has no arbitrary shell or file-access API.
 
 ## Develop
 

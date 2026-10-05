@@ -1,3 +1,8 @@
+> Current source adds the scoped extension described in
+> [actions and sensors](actions-and-sensors.md) and [the protocol](protocol.md).
+> Descriptions of a shared Remote grant/key below apply to legacy pairings and
+> the embedded voice bridge, not Settings → Remote → Add gadget.
+
 # Architecture
 
 Moldable Gadget SDK connects a device to a person's running Moldable desktop.

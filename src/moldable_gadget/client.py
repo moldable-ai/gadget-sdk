@@ -158,7 +158,18 @@ class GadgetClient:
                     await self._authenticate()
                     self._hello_nonce = b64(os.urandom(32))
                     self._reader = asyncio.create_task(self._receive())
-                    await self._request("remote.hello", {"clientNonce": self._hello_nonce})
+                    if self.grant is not None:
+                        ready = object_value(await self._request("gadget.hello", {}))
+                        for key in ("grantId", "workspaceId", "botId"):
+                            if ready.get(key) != self.grant.get(key):
+                                raise ProtocolError(
+                                    "Desktop gadget scope does not match the pairing."
+                                )
+                        self.ready = ready
+                        self._workspace = string(self.grant["workspaceId"])
+                        self._ready_event.set()
+                    else:
+                        await self._request("remote.hello", {"clientNonce": self._hello_nonce})
                     await self._ready_event.wait()
                     if self._failure:
                         raise self._failure
@@ -351,6 +362,28 @@ class GadgetClient:
             raise GadgetError("Only one live event consumer is supported.")
         self._collect_events = True
         try:
+            if self.grant is not None:
+                workspace = string(self.grant["workspaceId"])
+                bot = string(self.grant["botId"])
+                snapshot = await self.transcript(workspace, bot, limit=1)
+                cursor = string(snapshot.get("latestCursor"))
+                while True:
+                    page = await self.replay(workspace, bot, after_cursor=cursor)
+                    if page.get("resetRequired"):
+                        raise ReplayRequired(
+                            "Gadget event cursor expired; read a fresh transcript."
+                        )
+                    events = page.get("events", [])
+                    if not isinstance(events, list):
+                        raise ProtocolError("Invalid gadget replay events.")
+                    for event in events:
+                        yield object_value(event)
+                    next_cursor = string(page.get("nextCursor", cursor))
+                    if page.get("hasMore") and next_cursor == cursor:
+                        raise ProtocolError("Gadget replay did not advance.")
+                    cursor = next_cursor
+                    if not page.get("hasMore"):
+                        await asyncio.sleep(1)
             while True:
                 if self._failure:
                     raise self._failure
@@ -363,9 +396,23 @@ class GadgetClient:
             while not self._events.empty():
                 self._events.get_nowait()
 
+    @property
+    def grant(self) -> Object | None:
+        """The fixed host-issued scope, or None for a legacy trusted controller."""
+        value = self._state.get("gadget")
+        return object_value(value).copy() if value is not None else None
+
+    def _method(self, method: str) -> str:
+        return "gadget." + method.removeprefix("bot.") if self.grant else method
+
     async def select_workspace(self, workspace_id: str) -> None:
         """Select the host's Remote workspace; current hosts share it across controllers."""
         routing(workspace_id)
+        if self.grant is not None:
+            if workspace_id != self.grant["workspaceId"]:
+                raise GadgetError("Workspace is outside this gadget's grant.")
+            self._workspace = workspace_id
+            return
         workspaces = self.ready.get("workspaces")
         if not isinstance(workspaces, list) or not any(
             isinstance(item, dict) and item.get("id") == workspace_id for item in workspaces
@@ -380,6 +427,8 @@ class GadgetClient:
 
     async def bots(self, workspace_id: str) -> Json:
         self._require_workspace(workspace_id)
+        if self.grant is not None:
+            return {"bots": [{"botId": self.grant["botId"], "name": self.ready.get("botName")}]}
         return await self._request("bots.list", {"workspaceId": routing(workspace_id)})
 
     async def transcript(
@@ -391,7 +440,7 @@ class GadgetClient:
             if type(before_sequence) is not int or before_sequence < 0:
                 raise ValueError("before_sequence must be a non-negative integer")
             params["beforeSequence"] = before_sequence
-        return object_value(await self._request("bot.transcript", params))
+        return object_value(await self._request(self._method("bot.transcript"), params))
 
     async def replay(
         self, workspace_id: str, bot_id: str, *, after_cursor: str | None = None, limit: int = 50
@@ -400,7 +449,7 @@ class GadgetClient:
         params["limit"] = self._limit(limit)
         if after_cursor is not None:
             params["afterCursor"] = string(after_cursor, limit=4096)
-        return object_value(await self._request("bot.events.replay", params))
+        return object_value(await self._request(self._method("bot.events.replay"), params))
 
     async def send_text(
         self,
@@ -419,7 +468,7 @@ class GadgetClient:
         )
         if thread_id is not None:
             params["threadId"] = routing(thread_id)
-        return await self._request("bot.message.append", params)
+        return await self._request(self._method("bot.message.append"), params)
 
     async def interrupt(
         self, workspace_id: str, bot_id: str, turn_id: str, *, thread_id: str
@@ -427,7 +476,7 @@ class GadgetClient:
         params = self._scope(workspace_id, bot_id)
         params["turnId"] = routing(turn_id)
         params["threadId"] = routing(thread_id)
-        return await self._request("bot.turn.interrupt", params)
+        return await self._request(self._method("bot.turn.interrupt"), params)
 
     def _require_workspace(self, workspace_id: str) -> None:
         if workspace_id != self._workspace:
@@ -435,6 +484,8 @@ class GadgetClient:
 
     def _scope(self, workspace_id: str, bot_id: str) -> Object:
         self._require_workspace(workspace_id)
+        if self.grant is not None and bot_id != self.grant["botId"]:
+            raise GadgetError("Bot is outside this gadget's grant.")
         return {"workspaceId": routing(workspace_id), "botId": routing(bot_id)}
 
     @staticmethod
@@ -442,3 +493,18 @@ class GadgetClient:
         if type(limit) is not int or not 1 <= limit <= 100:
             raise ValueError("limit must be an integer from 1 to 100")
         return limit
+
+    async def gadget_request(self, method: str, params: Object) -> Object:
+        """Use the explicit gadget API without broadening a legacy pairing."""
+        if self.grant is None:
+            raise GadgetError(
+                "Pair through Settings → Remote → Add gadget to use device capabilities."
+            )
+        if method not in {
+            "capabilities.set",
+            "commands.poll",
+            "commands.result",
+            "observations.append",
+        }:
+            raise GadgetError("Unsupported gadget capability method.")
+        return object_value(await self._request("gadget." + method, params))

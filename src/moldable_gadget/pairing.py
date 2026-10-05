@@ -92,7 +92,25 @@ def parse_setup(link: str, relay: str = DEFAULT_RELAY, *, local: bool = False) -
     routing(desktop.get("id"))
     string(desktop.get("name"), limit=128)
     unb64(desktop.get("publicKey"), 32)
+    if "gadget" in setup:
+        validate_grant(setup["gadget"])
     return setup
+
+
+def validate_grant(value: object) -> Object:
+    grant = object_value(value)
+    if grant.get("version") != 1:
+        raise ProtocolError("Unsupported gadget grant version.")
+    identifier = string(grant.get("grantId"))
+    try:
+        parsed = uuid.UUID(identifier)
+    except ValueError as error:
+        raise ProtocolError("Invalid gadget grant identifier.") from error
+    if parsed.version != 4 or str(parsed) != identifier:
+        raise ProtocolError("Invalid gadget grant identifier.")
+    routing(grant.get("workspaceId"))
+    routing(grant.get("botId"))
+    return grant
 
 
 async def post_json(url: str, payload: Object) -> Object:
@@ -125,6 +143,8 @@ async def post_json(url: str, payload: Object) -> Object:
 def validate_state(state: Object, *, local: bool = False) -> None:
     if state.get("version") != 1:
         raise ProtocolError("Unsupported credential file version.")
+    if "gadget" in state:
+        validate_grant(state["gadget"])
     for key in ("deviceId", "desktopId", "sessionId"):
         routing(state.get(key))
     for key in ("privateKey", "desktopPublicKey", "e2eeKey"):
@@ -187,7 +207,7 @@ async def pair(
                 "name": name,
                 "platform": platform.system().lower(),
                 "model": "Moldable Gadget Python",
-                "appVersion": "0.1.0a1",
+                "appVersion": "0.2.0a1",
                 "publicKey": public,
             },
         },
@@ -216,6 +236,8 @@ async def pair(
         "websocketURL",
     ):
         state[key] = result.get(key)
+    if "gadget" in setup:
+        state["gadget"] = setup["gadget"]
     validate_state(state, local=local)
     store.save(state)
 
