@@ -14,9 +14,9 @@ authors = [{name = "Moldable contributors"}]
 dependencies = ["cryptography>=44,<47", "httpx>=0.28,<0.29", "websockets>=15,<17"]
 
 [project.urls]
-Repository = "https://github.com/moldable-ai/moldable-gadget-sdk"
-Documentation = "https://github.com/moldable-ai/moldable-gadget-sdk/blob/main/README.md"
-Issues = "https://github.com/moldable-ai/moldable-gadget-sdk/issues"
+Repository = "https://github.com/moldable-ai/gadget-sdk"
+Documentation = "https://github.com/moldable-ai/gadget-sdk/blob/main/README.md"
+Issues = "https://github.com/moldable-ai/gadget-sdk/issues"
 
 [project.optional-dependencies]
 dev = [

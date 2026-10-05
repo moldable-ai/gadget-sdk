@@ -25,7 +25,7 @@ see [security](SECURITY.md) and the [architecture](docs/architecture.md).
 Use Python 3.11 or newer on Linux or macOS:
 
 ```sh
-git clone https://github.com/moldable-ai/moldable-gadget-sdk.git
+git clone https://github.com/moldable-ai/gadget-sdk.git moldable-gadget-sdk
 cd moldable-gadget-sdk
 python3 -m venv .venv
 . .venv/bin/activate

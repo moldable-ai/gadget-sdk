@@ -25,6 +25,6 @@ arbitrary file access, firmware flashing or hardware actuator API is enabled.
 ## Reporting
 
 Do not put exploit details or credentials in a public issue. Use GitHub's
-[private vulnerability reporting](https://github.com/moldable-ai/moldable-gadget-sdk/security/advisories/new)
+[private vulnerability reporting](https://github.com/moldable-ai/gadget-sdk/security/advisories/new)
 on the canonical repository to contact the maintainers privately. There is no
 response-time or supported-version guarantee for this preview.
