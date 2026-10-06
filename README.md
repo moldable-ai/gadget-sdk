@@ -20,16 +20,22 @@ Use **Settings → Remote → Add gadget** for scoped access. A legacy pairing f
 The 0.2 alpha is the scoped preview; the earlier 0.1 source used the legacy client.
 See [security](SECURITY.md) and the [delivery plan](docs/roadmap.md).
 
-## Release availability
+## Install the preview
 
-The scoped preview has passed local package checks and native desktop/iOS
-verification; binary publication is pending.
-Install from source below for now. The
-[release workflow](https://github.com/moldable-ai/gadget-sdk/actions/workflows/release.yml)
-runs only for prepared releases. Completed
-[releases](https://github.com/moldable-ai/gadget-sdk/releases) include the wheel,
-source archive and SHA-256 checksums. Use current source for scoped actions and
-sensors; the earlier 0.1 source supports legacy Remote pairing only.
+The initial packaged alpha, **0.2.0a1**, is available on
+[PyPI](https://pypi.org/project/moldable-gadget-sdk/0.2.0a1/) and as a tagged
+[GitHub release](https://github.com/moldable-ai/gadget-sdk/releases/tag/v0.2.0a1).
+Use Python 3.11 or newer on Linux or macOS:
+
+```sh
+python -m pip install 'moldable-gadget-sdk==0.2.0a1'
+moldable-gadget --help
+```
+
+The release includes the wheel, source archive and SHA-256 checksums. It passed
+the Linux/macOS checks on Python 3.11 and 3.13, package installation checks,
+and native desktop/iOS verification. Scoped features require the matching host;
+see [compatibility and verification](docs/verification.md).
 
 ## Install from source
 

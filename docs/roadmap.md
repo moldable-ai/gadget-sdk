@@ -32,8 +32,9 @@ Current progress:
   host speech synthesis and paced PCM playback pass a live software round trip.
   Cancellation, new-recording interruption, and silent replay are covered.
   Physical microphones/speakers and image output remain separate work.
-- Stage 6: source installation is available. Hosted releases, signed updates,
-  rollback and physical validation are not supplied by this preview.
+- Stage 6: the initial `0.2.0a1` alpha is published on PyPI and GitHub with a
+  wheel, source archive and checksums. Source installation is also available.
+  Signed updates, rollback and physical validation remain separate work.
 
 Scoped grants add a separate `gadget.*` namespace. The desktop refuses to issue
 a gadget QR if the Relay does not echo its exact grant scope. Legacy pairings

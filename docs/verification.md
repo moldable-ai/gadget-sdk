@@ -118,3 +118,21 @@ simulator also verifies a button request, a stable reply beyond the normal
 display timeout, HMAC reconnect and revocation. These are software results;
 physical GPIO, display refresh, audio quality, battery life and flashing remain
 unverified. Firmware build hashes and notices live with those device plans.
+
+## Initial package publication — October 6, 2026
+
+Release `v0.2.0a1` targets SDK commit
+`47aa3ff404d4fa235b006e8d3986ed768ecc2bd5`. The prepared release's incomplete jobs
+were retried after GitHub's runner-allocation incident; its already passing
+macOS/Python 3.11 job was reused. Linux/macOS on Python 3.11 and 3.13 all passed,
+as did the build, clean wheel installation, PyPI Trusted Publishing and GitHub
+artifact publication.
+
+A fresh installation from PyPI outside the checkout imported `GadgetClient`
+and ran both CLI entrypoints on Python 3.12.8. The downloaded GitHub wheel and
+source archive matched their release checksums and PyPI SHA-256 digests.
+Native host and physical-hardware limits above still apply.
+
+[Release](https://github.com/moldable-ai/gadget-sdk/releases/tag/v0.2.0a1) ·
+[PyPI](https://pypi.org/project/moldable-gadget-sdk/0.2.0a1/) ·
+[Workflow](https://github.com/moldable-ai/gadget-sdk/actions/runs/37368997319)
